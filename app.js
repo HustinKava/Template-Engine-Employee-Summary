@@ -1,15 +1,97 @@
+// Constructor files
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
+
+// Inquirer, path and file system are all node built in modules
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 
-const OUTPUT_DIR = path.resolve("./output", "output");
+const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+const teamMembers = [];
+
+inquirer
+    .prompt([{
+        type: 'list',
+        name: 'role',
+        message: 'What role do you pick?',
+        choices: ['Manager', 'Engineer', 'Intern'],
+        // when : (response) => response.moreTeamMembers === true
+    },
+    {
+        type: 'input',
+        name: 'id',
+        message: 'Please enter your id number',
+        validate: (value) => {
+            if (isNaN(value)) {
+                return 'You need to enter a valid id number';
+            } else {
+                return true;
+            }
+        }
+    },
+    {
+        type: 'input',
+        name: 'email',
+        message: 'Please enter your email address',
+        validate: (value) => {
+            if (value) {
+                return true;
+            } else {
+                return 'You need to enter a valid email address';
+            }
+        }
+    },
+    {
+        type: 'input',
+        name: 'officeNumber',
+        message: 'Please enter your office number',
+        when : (response) => response.role === 'Manager',
+        validate: (value) => {
+            if (isNaN(value)) {
+                return 'You need to enter a valid office number';
+            } else {
+                return true;
+            }
+        }
+    },
+    {
+        type: 'input',
+        name: 'github',
+        message: 'Please enter your github username',
+        when : (response) => response.role === 'Engineer',
+        validate: (value) => {
+            if (value) {
+                return true;
+            } else {
+                return 'You need to enter a valid github username';
+            }
+        }
+    },
+    {
+        type: 'input',
+        name: 'school',
+        message: 'Please enter your office number',
+        when : (response) => response.role === 'Intern',
+        validate: (value) => {
+            if (value) {
+                return true;
+            } else {
+                return 'You need to enter a valid school name';
+            }
+        }
+    },
+    {
+        type: 'confirm',
+        name: 'moreTeamMembers',
+        message: 'Would you like to add another team member?'
+    }
+    ]);
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
