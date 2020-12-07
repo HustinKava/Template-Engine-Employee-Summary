@@ -15,13 +15,25 @@ const render = require("./lib/htmlRenderer");
 
 const teamMembers = [];
 
+const teamQuestions = () => {
 inquirer
     .prompt([{
         type: 'list',
         name: 'role',
         message: 'What role do you pick?',
         choices: ['Manager', 'Engineer', 'Intern'],
-        // when : (response) => response.moreTeamMembers === true
+    },
+    {
+        type: 'input',
+        name: 'name',
+        message: 'Please enter your name',
+        validate: (value) => {
+            if (value) {
+                return true;
+            } else {
+                return 'You need to enter your name';
+            }
+        }
     },
     {
         type: 'input',
@@ -51,7 +63,7 @@ inquirer
         type: 'input',
         name: 'officeNumber',
         message: 'Please enter your office number',
-        when : (response) => response.role === 'Manager',
+        when: (response) => response.role === 'Manager',
         validate: (value) => {
             if (isNaN(value)) {
                 return 'You need to enter a valid office number';
@@ -64,7 +76,7 @@ inquirer
         type: 'input',
         name: 'github',
         message: 'Please enter your github username',
-        when : (response) => response.role === 'Engineer',
+        when: (response) => response.role === 'Engineer',
         validate: (value) => {
             if (value) {
                 return true;
@@ -77,7 +89,7 @@ inquirer
         type: 'input',
         name: 'school',
         message: 'Please enter your office number',
-        when : (response) => response.role === 'Intern',
+        when: (response) => response.role === 'Intern',
         validate: (value) => {
             if (value) {
                 return true;
@@ -89,9 +101,39 @@ inquirer
     {
         type: 'confirm',
         name: 'moreTeamMembers',
-        message: 'Would you like to add another team member?'
+        message: 'Would you like to add another team member?',
     }
-    ]);
+    ]).then (response => {
+
+        if (response.role === 'Manager') {
+            
+            const NewManager = new Manager(response.name, response.id, response.email, response.officeNumber);
+
+            teamMembers.push(NewManager)
+            console.log(teamMembers)
+        } 
+        // const Engineer = new Engineer;
+        // const Intern = new Intern;
+
+        if (response.moreTeamMembers) {
+            console.log(response)
+                       teamQuestions()            
+        } else {
+            let test = render(teamMembers);
+            // teamMembers.push(response);
+            console.log(test)
+                fs.writeFile(outputPath, render(teamMembers), function(err) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log('EPLOYEE SUMMARY SUCCESSFULLY CREATED!')
+                    }
+                })
+        }
+    }) 
+};
+
+teamQuestions();
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
