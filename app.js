@@ -31,7 +31,7 @@ inquirer
         name: 'name',
         message: 'Please enter your name',
         validate: (value) => {
-            if (value) {
+            if (isNaN(value)) {
                 return true;
             } else {
                 return 'You need to enter your name';
@@ -55,7 +55,10 @@ inquirer
         name: 'email',
         message: 'Please enter your email address',
         validate: (value) => {
-            if (value) {
+
+            const pass = value.match(/\S+@\S+\.\S+/);
+
+            if (pass) {
                 return true;
             } else {
                 return 'You need to enter a valid email address';
