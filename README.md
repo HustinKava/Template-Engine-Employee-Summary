@@ -43,7 +43,7 @@ You will then be prompted with a series of questions in the following order
 
 
 ## Video Walkthrough  
-Please click **[Here]()** to view a video on the application
+Please click **[Here](https://youtu.be/mR7uePdATIk)** to view a video on the application
 
 ## Questions
 To view my other repositories or to connect with me on GitHub please click **[Here](https://github.com/HustinKava/)**
